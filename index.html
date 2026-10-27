@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Sistema de requisição de equipamentos da EPBJC" />
+  <title>EPBJC | Requisição de Equipamentos</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="#" aria-label="EPBJC - Requisição de Equipamentos">
+        <span class="brand-mark">E</span>
+        <span>
+          <strong>EPBJC</strong>
+          <small>Requisição de Equipamentos</small>
+        </span>
+      </a>
+
+      <div id="userArea" class="user-area hidden">
+        <div class="user-copy">
+          <strong id="userName">Aluno</strong>
+          <span id="userEmail"></span>
+        </div>
+        <button id="logoutBtn" class="btn btn-ghost" type="button">Terminar sessão</button>
+      </div>
+    </header>
+
+    <main>
+      <section id="loginView" class="login-view">
+        <div class="login-card">
+          <span class="eyebrow">Sistema interno EPBJC</span>
+          <h1>Requisita equipamento<br>de forma simples.</h1>
+          <p class="lead">
+            Entra com a tua conta institucional Microsoft para efetuares um pedido
+            e acompanhares o respetivo estado.
+          </p>
+
+          <button id="loginBtn" class="btn btn-primary btn-microsoft" type="button">
+            <span class="ms-grid" aria-hidden="true">
+              <i></i><i></i><i></i><i></i>
+            </span>
+            Entrar com Microsoft
+          </button>
+
+          <p class="helper">
+            Apenas contas institucionais autorizadas podem aceder.
+          </p>
+        </div>
+
+        <aside class="login-visual" aria-hidden="true">
+          <div class="device-card device-card-a">
+            <span>💻</span>
+            <strong>Portáteis</strong>
+            <small>Disponíveis para projetos e aulas</small>
+          </div>
+          <div class="device-card device-card-b">
+            <span>📱</span>
+            <strong>Tablets</strong>
+            <small>Mobilidade para trabalho em sala</small>
+          </div>
+          <div class="device-card device-card-c">
+            <span>📽️</span>
+            <strong>Projetores</strong>
+            <small>Apresentações e atividades</small>
+          </div>
+        </aside>
+      </section>
+
+      <section id="dashboardView" class="dashboard hidden">
+        <div class="dashboard-head">
+          <div>
+            <span class="eyebrow">Área do aluno</span>
+            <h1>Os meus pedidos</h1>
+            <p>Consulta pedidos anteriores ou cria uma nova requisição.</p>
+          </div>
+          <button id="newRequestBtn" class="btn btn-primary" type="button">
+            + Nova requisição
+          </button>
+        </div>
+
+        <div class="stats-grid">
+          <article class="stat-card">
+            <span>Pedidos</span>
+            <strong id="statTotal">0</strong>
+          </article>
+          <article class="stat-card">
+            <span>Pendentes</span>
+            <strong id="statPending">0</strong>
+          </article>
+          <article class="stat-card">
+            <span>Em empréstimo</span>
+            <strong id="statLoaned">0</strong>
+          </article>
+          <article class="stat-card">
+            <span>Devolvidos</span>
+            <strong id="statReturned">0</strong>
+          </article>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head">
+            <div>
+              <h2>Histórico de requisições</h2>
+              <p>Os pedidos associados à tua conta institucional aparecem aqui.</p>
+            </div>
+            <select id="statusFilter" class="select-small" aria-label="Filtrar por estado">
+              <option value="Todos">Todos os estados</option>
+              <option value="Pendente">Pendente</option>
+              <option value="Em empréstimo">Em empréstimo</option>
+              <option value="Devolvido">Devolvido</option>
+              <option value="Recusado">Recusado</option>
+            </select>
+          </div>
+
+          <div id="requestsList" class="requests-list">
+            <div class="empty-state">
+              <div class="empty-icon">📦</div>
+              <h3>Ainda não tens requisições</h3>
+              <p>Cria o primeiro pedido quando precisares de equipamento.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <dialog id="requestDialog" class="modal">
+    <form id="requestForm" method="dialog">
+      <div class="modal-head">
+        <div>
+          <span class="eyebrow">Novo pedido</span>
+          <h2>Requisição de equipamento</h2>
+        </div>
+        <button id="closeDialogBtn" class="icon-btn" type="button" aria-label="Fechar">×</button>
+      </div>
+
+      <div class="form-grid">
+        <label class="field">
+          <span>Equipamento *</span>
+          <select id="equipment" required>
+            <option value="">Seleciona...</option>
+            <option value="Portátil01">Portátil01</option>
+            <option value="Portátil02">Portátil02</option>
+            <option value="Tablet01">Tablet01</option>
+            <option value="Tablet02">Tablet02</option>
+            <option value="Projetor01">Projetor01</option>
+          </select>
+        </label>
+
+        <label class="field">
+          <span>Data do pedido *</span>
+          <input id="requestDate" type="date" required />
+        </label>
+
+        <label class="field">
+          <span>Devolução prevista *</span>
+          <input id="returnDate" type="date" required />
+        </label>
+
+        <label class="field full">
+          <span>Finalidade / observações</span>
+          <textarea id="observations" rows="4" maxlength="500"
+            placeholder="Ex.: Utilização numa apresentação de turma."></textarea>
+          <small>Máximo de 500 caracteres.</small>
+        </label>
+      </div>
+
+      <div id="formMessage" class="form-message hidden" role="alert"></div>
+
+      <div class="modal-actions">
+        <button id="cancelBtn" class="btn btn-ghost" type="button">Cancelar</button>
+        <button id="submitBtn" class="btn btn-primary" type="submit">Enviar pedido</button>
+      </div>
+    </form>
+  </dialog>
+
+  <div id="toast" class="toast hidden" role="status"></div>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>

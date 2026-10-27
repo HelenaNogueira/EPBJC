@@ -1,0 +1,43 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Os administradores são definidos manualmente na coleção "admins".
+    // Cada documento deve ter como ID o UID Firebase do professor/funcionário.
+    function isAdmin() {
+      return request.auth != null
+        && exists(/databases/$(database)/documents/admins/$(request.auth.uid));
+    }
+
+    function isOwner() {
+      return request.auth != null
+        && resource.data.uid == request.auth.uid;
+    }
+
+    match /requisicoes/{requestId} {
+
+      // ALUNO:
+      // Pode criar pedidos apenas em seu nome e sempre como "Pendente".
+      allow create: if request.auth != null
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.email == request.auth.token.email
+        && request.resource.data.estado == "Pendente";
+
+      // Pode ler apenas os próprios pedidos.
+      // ADMIN pode ler todos.
+      allow read: if isAdmin()
+        || (request.auth != null && resource.data.uid == request.auth.uid);
+
+      // Apenas administradores podem alterar estado/dados ou apagar pedidos.
+      allow update, delete: if isAdmin();
+    }
+
+    // Lista de administradores.
+    // Utilizadores normais não a podem consultar nem alterar.
+    match /admins/{adminId} {
+      allow read: if request.auth != null && request.auth.uid == adminId;
+      allow write: if false;
+    }
+  }
+}
